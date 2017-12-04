@@ -1,23 +1,118 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
+import * as firebase from 'firebase';
+import { Input } from './components/Input';
+import { Button } from './components/Button';
 
 export default class App extends React.Component {
+  state = {
+    email: '',
+    password: '',
+    authenticating: false,
+    user: null,
+    error: '',
+  }
+  componentWillMount() {
+    const firebaseConfig = {
+      apikey: 'AIzaSyAoK8C81LlVVlmqRauoXtsZ2SPmzSsP1co',
+      authDomain: 'my-awesome-project-9e92d.firebaseapp.com',
+
+    }
+    firebase.initializeApp(firebaseConfig);
+  }
+
+  onPressSignIn() {
+    this.setState({
+      authenticating: true,
+    });
+
+    const { email, password } = this.state;
+    
+    firebase.auth().signInWithEmailAndPassword(email, password)
+      .then(user => this.setState({
+        authenticating: false,
+        user,
+        error: '',
+      }))
+      .catch(() => {
+        // Login was not successful
+        firebase.auth().createUserWithEmailAndPassword(email, password)
+          .then(user => this.setState({
+            authenticating: false,
+            user,
+            error: '',
+          }))
+          .catch(() => this.setState({
+            authenticating: false,
+            user: null,
+            error: 'Authentication Failure',
+          }))
+      })
+  }
+    
+  onPressLogOut() {
+    firebase.auth().signOut()
+      .then(() => {
+        this.setState({
+          email: '',
+          password: '',
+          authenticating: false,
+          user: null,
+        })
+      }, error => {
+        console.error('Sign Out Error', error);
+      });
+  }
+  
+
+  renderCurrentState() {
+    if(this.state.authenticating) {
+      return (
+        <View style={styles.form}>
+          <ActivityIndicator size='large' />
+        </View>
+      )
+    }
+    
+    return (
+      <View style={styles.form}>
+        <Input 
+          placeholder='Enter your email...'
+          label='Email'
+          onChangeText={email => this.setState({ email })}
+          value={this.state.email}
+        />
+        <Input 
+          placeholder='Enter your password...'
+          label='Password'
+          secureTextEntry
+          onChangeText={password => this.setState({ password })}
+          value={this.state.password}
+        />
+        <Button onPress={() => this.onPressSignIn()}>Log in</Button>
+      </View>
+    )
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-        <Text>Changes you make will automatically reload.</Text>
-        <Text>Shake your phone to open the developer menu.</Text>
+        {this.renderCurrentState()}
       </View>
     );
   }
+  
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    padding: 20,
     alignItems: 'center',
     justifyContent: 'center',
+    flexDirection: 'row'
   },
+  form: {
+    flex: 1,
+  }
 });
