@@ -4,6 +4,8 @@ import ViewContainer from '../../components/ViewContainer';
 import StatusbarBackground from '../../components/StatusbarBackground';
 import { styles } from './styles';
 import Login from './Login';
+import { firebaseRef } from '../../services/Firebase';
+import { Actions } from 'react-native-router-flux';
 
 export default class Register extends React.Component {
 
@@ -12,7 +14,23 @@ export default class Register extends React.Component {
 
         this.state = {
             email: '',
-            password: ''
+            password: '',
+            verifyPassword: ''
+        }
+        this._register = this._register.bind(this)
+    }
+
+    _register() {
+        if(this.state.password == this.state.verifyPassword) {
+            firebaseRef.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).catch(function(error) {
+                console.log(error.code)
+                console.log(error.message)
+            })
+
+            Actions.pagecontrol();
+
+        } else {
+            console.log("Password did not match");
         }
     }
 
@@ -42,8 +60,19 @@ export default class Register extends React.Component {
                         autoCorrect={false}
                         returnKeyType="go"
                     />
+
+                    <TextInput 
+                        style={styles.textInput} 
+                        onChangeText={ (text) => this.setState({verifyPassword: text })}
+                        value={this.state.verifyPassword}
+                        placeholder="VERIFY PASSWORD"
+                        placeholderTextColor="black"
+                        secureTextEntry={true}
+                        autoCorrect={false}
+                        returnKeyType="go"
+                    />
                     <View style={styles.register}>
-                        <TouchableOpacity style={styles.registerButton} >
+                        <TouchableOpacity style={styles.registerButton} onPress={this._register}>
                             <Text style={styles.registerBunttonText}>REGISTER</Text>
                         </TouchableOpacity>
                     </View>

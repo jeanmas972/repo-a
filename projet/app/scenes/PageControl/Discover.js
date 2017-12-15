@@ -9,9 +9,9 @@ export default class Discover extends  React.Component {
         return (
             <ViewContainer>
                 <StatusbarBackground />
-                <View style={styles.name}>
+               
                     <Text>Discover View  </Text>
-                </View>
+                
             </ViewContainer>
         );
     }

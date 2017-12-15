@@ -3,6 +3,9 @@ import { StyleSheet, Text, View, AppRegistry, TouchableOpacity, ActivityIndicato
 import ViewContainer from '../../components/ViewContainer';
 import StatusbarBackground from '../../components/StatusbarBackground';
 import { styles } from './styles';
+import _ from 'lodash';
+import { Actions } from 'react-native-router-flux';
+import { firebaseRef } from '../../services/Firebase';
 
 export default class Login extends React.Component {
 
@@ -11,8 +14,27 @@ export default class Login extends React.Component {
 
         this.state = {
             email: '',
-            password: ''
+            password: '',
+            status: ''
         }
+
+        this._login = this._login.bind(this);
+        this._register = this._register.bind(this);
+    }
+
+    _login() {
+        if(this.state.password == this.state.verifyPassword) {
+            firebaseRef.auth().signInWithEmailAndPassword(this.state.email, this.state.password).catch(function(error){
+                console.log(error.code)
+                console.log(error.message)
+            })
+        } else {
+            console.log("Password did not match");
+        }
+    }
+
+    _register() {
+        Actions.register()
     }
 
     render(){
@@ -43,12 +65,12 @@ export default class Login extends React.Component {
                     />
 
                     <View style={styles.login}>
-                        <TouchableOpacity style={styles.loginButton} >
+                        <TouchableOpacity style={styles.loginButton} onPress={this._login}>
                             <Text style={styles.loginBunttonText}>LOG IN</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.register}>
-                        <TouchableOpacity style={styles.registerButton} >
+                        <TouchableOpacity style={styles.registerButton}  onPress={this._register}>
                             <Text style={styles.registerBunttonText}>create account</Text>
                         </TouchableOpacity>
                     </View>

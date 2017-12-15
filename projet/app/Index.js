@@ -5,26 +5,36 @@ import Login from './scenes/Authentication/Login';
 import Register from './scenes/Authentication/Register';
 import Profile from './scenes/PageControl/Profile';
 import Discover from './scenes/PageControl/Discover';
-import PageController from './scenes/PageControl/PageControl'
-import * as firebase from 'firebase';
-
-
-const config = {
-  apikey: 'AIzaSyAoK8C81LlVVlmqRauoXtsZ2SPmzSsP1co',
-  authDomain: 'my-awesome-project-9e92d.firebaseapp.com',
-  databaseUrl: 'https://my-awesome-project-9e92d.firebaseio.com/',
-  storageBucket: '',
-  messagingSenderId: '',
-};
-firebase.initializeApp(config);
+import PageController from './scenes/PageControl/PageControl';
+import { Router, Scene } from 'react-native-router-flux';
 
 
 export default class Index extends React.Component {
 
     render(){
         return (
+            <Router>
+                <Scene key={'root'}>
+                    <Scene
+                        key={"login"}
+                        component={Login}
+                        initial={true}
+                        hideNavBar={true}
+                    />
+                    <Scene
+                        key={"register"}
+                        component={Register}
+                        
+                    />
+                    <Scene
+                        key={"pagecontrol"}
+                        component={PageController}
+                        
+                    />
+                </Scene>
+            </Router>
 
-            <PageController />
+            //<Register />
                 
         );
     }
