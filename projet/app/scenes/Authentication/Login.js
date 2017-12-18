@@ -23,14 +23,13 @@ export default class Login extends React.Component {
     }
 
     _login() {
-        if(this.state.password == this.state.verifyPassword) {
-            firebaseRef.auth().signInWithEmailAndPassword(this.state.email, this.state.password).catch(function(error){
-                console.log(error.code)
-                console.log(error.message)
-            })
-        } else {
-            console.log("Password did not match");
-        }
+        firebaseRef.auth().signInWithEmailAndPassword(this.state.email, this.state.password).catch(function(error){
+            console.log(error.code)
+            console.log(error.message)
+        })
+
+        Actions.pagecontrol();
+    
     }
 
     _register() {
