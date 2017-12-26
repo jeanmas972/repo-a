@@ -21,13 +21,31 @@ export default class Register extends React.Component {
     }
 
     _register() {
-        if(this.state.password == this.state.verifyPassword) {
-            firebaseRef.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).catch(function(error) {
-                console.log(error.code)
-                console.log(error.message)
-            })
 
-            Actions.pagecontrol();
+       // var Action =  Actions.pagecontrol();
+
+        if(this.state.password == this.state.verifyPassword) {
+            firebaseRef.auth().createUserAndRetrieveDataWithEmailAndPassword(this.state.email, this.state.password).catch(function(error) {
+               // console.log(error.code);
+               // console.log(error.message)
+                var errorCode = error.code;
+                if(error){
+                    console.log(error.code, error.message );
+                }/*
+                if(errorCode == 'auth/email-already-in-use') {
+                    console.log('An account with the given email address already exists. ');
+                } 
+                */
+                else {
+                    console.log('Register');
+                    Actions.pagecontrol();
+                }
+                console.log('error');
+                console.log(error.code, error.message );
+               // Actions.pagecontrol();
+            });
+
+           // Actions.pagecontrol();
 
         } else {
             console.log("Password did not match");
