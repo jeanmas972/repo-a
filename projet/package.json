@@ -19,11 +19,13 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "axios": "^0.17.1",
     "expo": "^22.0.0",
     "firebase": "^4.7.0",
     "lodash": "^4.17.4",
     "react": "16.0.0-beta.5",
     "react-native": "^0.49.5",
+    "react-native-extended-stylesheet": "^0.8.0",
     "react-native-page-control": "^1.1.1",
     "react-native-pagecontrol": "^4.0.0",
     "react-native-router-flux": "^4.0.0-beta.24",
