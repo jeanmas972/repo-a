@@ -22,14 +22,15 @@ export default class Login extends React.Component {
         this._register = this._register.bind(this);
     }
 
-    _login() {
-        firebaseRef.auth().signInWithEmailAndPassword(this.state.email, this.state.password).catch(function(error){
-            console.log(error.code)
-            console.log(error.message)
-        })
+    _login = () => {
+        firebaseRef.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
+        .then((loggedInUser) => {
+            console.log(`Login with user `);
+            Actions.pagecontrol();
+        }).catch((error) => {
+            console.log(error.code,':', error.message);
+        });
 
-        Actions.pagecontrol();
-    
     }
 
     _register() {

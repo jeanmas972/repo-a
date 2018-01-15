@@ -13,21 +13,25 @@ export default class Register extends React.Component {
         super(props)
 
         this.state = {
+            isAuthenticated: false,
             email: '',
             password: '',
-            verifyPassword: ''
+            verifyPassword: '',
+            user: null,
         }
         this._register = this._register.bind(this)
     }
 
-    _register() {
+    _register = () => {
         if(this.state.password == this.state.verifyPassword) {
-            firebaseRef.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).catch(function(error) {
-                console.log(error.code)
-                console.log(error.message)
-            })
-
-            Actions.pagecontrol();
+            firebaseRef.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
+            .then((loggedInUser) => {
+                this.setState({user: loggedInUser});
+                console.log(`Register with user`)
+                Actions.pagecontrol();
+            }).catch((error) => {
+                console.log(error.code, ':', error.message );
+            });
 
         } else {
             console.log("Password did not match");
