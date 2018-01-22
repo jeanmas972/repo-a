@@ -26,10 +26,23 @@ export default class Login extends React.Component {
         firebaseRef.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
         .then((loggedInUser) => {
             console.log(`Login with user `);
+            
             Actions.pagecontrol();
         }).catch((error) => {
             console.log(error.code,':', error.message);
         });
+
+        firebaseRef.auth().onAuthStateChanged(firebaseUser => {
+            if(firebaseUser) {
+                console.log(firebaseUser);
+                firebaseRef.database().ref(`/users/${firebaseUser.uid}/profile`).set({
+                    //name: firebaseUser.displayName,
+                    email: firebaseUser.email
+                })
+            } else {
+                console.log('not logged in');
+            }
+        })
 
     }
 

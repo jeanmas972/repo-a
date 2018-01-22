@@ -28,6 +28,17 @@ export default class Register extends React.Component {
             .then((loggedInUser) => {
                 this.setState({user: loggedInUser});
                 console.log(`Register with user`)
+                firebaseRef.auth().onAuthStateChanged(firebaseUser => {
+                    if(firebaseUser) {
+                        console.log(firebaseUser);
+                        firebaseRef.database().ref(`/users/${firebaseUser.uid}/profile`).set({
+                            //name: firebaseUser.displayName,
+                            email: firebaseUser.email
+                        });
+                    } else {
+                        console.log('not logged in');
+                    }
+                });
                 Actions.pagecontrol();
             }).catch((error) => {
                 console.log(error.code, ':', error.message );
@@ -36,6 +47,20 @@ export default class Register extends React.Component {
         } else {
             console.log("Password did not match");
         }
+        
+        // l'asynchrone crée un destruction des données dans la base
+        // à cause du changement d'utilisateur dans login  
+        /*firebaseRef.auth().onAuthStateChanged(firebaseUser => {
+            if(firebaseUser) {
+                console.log(firebaseUser);
+                firebaseRef.database().ref(`/users/${firebaseUser.uid}/profile`).set({
+                    //name: firebaseUser.displayName,
+                    email: firebaseUser.email
+                });
+            } else {
+                console.log('not logged in');
+            }
+        });*/
     }
 
     render(){
